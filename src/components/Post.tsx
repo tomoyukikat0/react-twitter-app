@@ -39,7 +39,7 @@ const Post: React.FC<PROPS> = (props) => {
     });
     setComment("");
   };
-  
+
   return (
     <div className={styles.post}>
       <div className={styles.post_avatar}>
@@ -63,6 +63,28 @@ const Post: React.FC<PROPS> = (props) => {
               <img src={props.image} alt="tweet" />
             </div>
           )}
+          <form onSubmit={newComment}>
+              <div className={styles.post_form}>
+                <input
+                  className={styles.post_input}
+                  type="text"
+                  placeholder="Type new comment..."
+                  value={comment}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setComment(e.target.value)
+                  }
+                />
+                <button
+                  disabled={!comment}
+                  className={
+                    comment ? styles.post_button : styles.post_buttonDisable
+                  }
+                  type="submit"
+                >
+                  <SendIcon className={styles.post_sendIcon} />
+                </button>
+              </div>
+            </form>
         </div>
       </div>
     </div>
