@@ -119,14 +119,44 @@ const Auth: React.FC = () => {
             />
     
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              startIcon={<EmailIcon />}
+              onClick={
+                isLogin
+                  ? async () => {
+                      try {
+                        await signInEmail();
+                      } catch (err) {
+                        alert(err.message);
+                      }
+                    }
+                  : async () => {
+                    try {
+                      await signUpEmail();
+                    } catch (err) {
+                      alert(err.message);
+                    }
+                  }
+              }
             >
               {isLogin? "Login" : "Resister"}
             </Button>
+            <Grid container>
+              <Grid item xs>
+                <span>Forgot password?</span>
+              </Grid>
+              <Grid item xs>
+                <span
+                  className={styles.login_toggleMode} 
+                  onClick={() => setIsLogin(!isLogin)}
+                >
+                  {isLogin ? "Create new account ?" : "Back to login"}
+                </span>
+              </Grid>
+            </Grid>
 
             <Button
               fullWidth
