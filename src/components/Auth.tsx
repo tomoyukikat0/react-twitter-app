@@ -148,7 +148,7 @@ const Auth: React.FC = () => {
               <Grid item xs>
                 <span>Forgot password?</span>
               </Grid>
-              <Grid item xs>
+              <Grid item>
                 <span
                   className={styles.login_toggleMode} 
                   onClick={() => setIsLogin(!isLogin)}
