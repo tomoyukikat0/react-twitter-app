@@ -1,26 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import styles from "./TweetInput.module.css";
+import { storage, db, auth } from "../firebase";
+import firebase from "firebase/app";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
-import { storage, db, auth } from "../firebase";
 import { Avatar, Button, IconButton } from "@material-ui/core";
-import firebase from "firebase/app";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
-export const TweetInput = () => {
+function TweetInput() {
   const user = useSelector(selectUser);
   const [tweetImage, setTweetImage] = useState<File | null>(null);
   const [tweetMsg, setTweetMsg] = useState("");
+
   const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files![0]) {
       setTweetImage(e.target.files![0]);
       e.target.value = "";
     }
-  }
+  };
   const sendTweet = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (tweetImage) {
-      const S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const S =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       const N = 16;
       const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
         .map((n) => S[n % S.length])
@@ -29,11 +31,11 @@ export const TweetInput = () => {
       const uploadTweetImg = storage.ref(`images/${fileName}`).put(tweetImage);
       uploadTweetImg.on(
         firebase.storage.TaskEvent.STATE_CHANGED,
-
         () => {},
         (err) => {
           alert(err.message);
-        }, async () => {
+        },
+        async () => {
           await storage
             .ref("images")
             .child(fileName)
@@ -55,18 +57,19 @@ export const TweetInput = () => {
         image: "",
         text: tweetMsg,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        username: user.displayName
-      })
+        username: user.displayName,
+      });
     }
     setTweetImage(null);
     setTweetMsg("");
   };
+
   return (
     <>
       <form onSubmit={sendTweet}>
         <div className={styles.tweet_form}>
           <Avatar
-            className={styles.tweet_avatr}
+            className={styles.tweet_avatar}
             src={user.photoUrl}
             onClick={async () => {
               await auth.signOut();
@@ -74,13 +77,12 @@ export const TweetInput = () => {
           />
           <input
             className={styles.tweet_input}
-            placeholder="What't happening?"
+            placeholder="What's happening?"
             type="text"
             autoFocus
             value={tweetMsg}
             onChange={(e) => setTweetMsg(e.target.value)}
           />
-
           <IconButton>
             <label>
               <AddAPhotoIcon
@@ -109,6 +111,6 @@ export const TweetInput = () => {
       </form>
     </>
   );
-};
+}
 
 export default TweetInput;
